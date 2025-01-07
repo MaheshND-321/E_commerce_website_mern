@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     }
     ,password:{
         type:String,
+        default: "client\src\assets\cool-profile-picture.jpg",
+    },
+    avatar:{
+        type:String,
         required : true,
     }
 }, {timestamps:true});
