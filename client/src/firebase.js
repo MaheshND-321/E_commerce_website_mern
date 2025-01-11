@@ -1,17 +1,21 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+// import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "mernestatewebsite.firebaseapp.com",
-  projectId: "mernestatewebsite",
-  storageBucket: "mernestatewebsite.firebasestorage.app",
-  messagingSenderId: "986545140519",
-  appId: "1:986545140519:web:0301c15c4b29b3f6af2f02"
+  apiKey: "AIzaSyAELTJTclDfTX6WTef9IHYHQf4qrF9HlCM",
+  authDomain: "real-estate-50d7c.firebaseapp.com",
+  projectId: "real-estate-50d7c",
+  storageBucket: "real-estate-50d7c.appspot.com",
+  messagingSenderId: "440471471162",
+  appId: "1:440471471162:web:352d5cbd0221f270eb6103",
+  measurementId: "G-12VD8H6K5Q"
 };
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
