@@ -1,20 +1,35 @@
 import { useSelector } from "react-redux";
 import { useRef, useState, useEffect } from "react";
 import {
+  updateStart,
+  updateUserFailure,
+  updateUserSuccess,
+  deleteStart,
+  deleteUserFailure,
+  deleteUserSuccess,
+  signOutStart,
+  signOutUserFailure,
+  signOutUserSuccess,
+} from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
+import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import { data } from "react-router-dom";
 
 export default function Profile() {
   const fileRef = useRef(null);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const dispatch = useDispatch();
   // console.log("file", file);
   // console.log("filePerc", filePerc);
   // console.log("fileUploadError", fileUploadError);
@@ -48,10 +63,73 @@ export default function Profile() {
       }
     );
   };
+
+  const handelChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+    console.log(formData);
+  };
+
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateStart());
+      const res = await fetch(`api/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          method: "POST",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+      console.log("Dispatched updateUserSuccess:", response.data);
+    } catch (error) {
+      dispatch(updateUserFailure(data.message));
+    }
+  };
+
+  const handelDeleteUser = async () => {
+    try {
+      dispatch(deleteStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handeSignOut = async () => {
+    try {
+      dispatch(signOutStart());
+      const res = await fetch(`/api/auth/signout`);
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+        return;
+      }
+      dispatch(signOutUserSuccess(data));
+    } catch (error) {
+      dispatch(signOutUserFailure(data.message));
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center">Profile</h1>
-      <form className="flex flex-col gap-4">
+      <form onSubmit={handelSubmit} className="flex flex-col gap-4">
         <input
           onChange={(e) => setFile(e.target.files[0])}
           type="file"
@@ -84,6 +162,7 @@ export default function Profile() {
           defaultValue={currentUser.username}
           id="username"
           className="border p-3 rounded-lg"
+          onChange={handelChange}
         />
         <input
           type="email"
@@ -91,21 +170,37 @@ export default function Profile() {
           defaultValue={currentUser.email}
           id="email"
           className="border p-3 rounded-lg"
+          onChange={handelChange}
         />
         <input
           type="password"
           placeholder="password"
           id="password"
           className="border p-3 rounded-lg"
+          onChange={handelChange}
         />
-        <button className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-80">
-          Update
+        <button
+          disabled={loading}
+          className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-80"
+        >
+          {loading ? "Loading..." : "Update"}
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span
+          onClick={handelDeleteUser}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete Account
+        </span>
+        <span onClick={handeSignOut} className="text-red-700 cursor-pointer">
+          Sign Out
+        </span>
       </div>
+      <p className="text-red-700 mt-5">{error ? error : ""}</p>
+      <p className="text-green-700">
+        {updateSuccess ? "Successfuly updated the profile Info" : ""}
+      </p>
     </div>
   );
 }
