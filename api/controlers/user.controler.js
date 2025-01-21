@@ -34,7 +34,7 @@ export const updateUser = async(req, res, next)=>{
 }
 
 export const deleteUser = async(req, res, next) =>{
-    if(req.user.id!==req.params.id) return next(errorHandeler(401, 'You can only dlete your account!'));
+    if(req.user.id!==req.params.id) return next(errorHandeler(401, 'You can only delete your account!'));
     try{
         await User.findByIdAndDelete(req.params.id);
         res.clearCookie("access_token");
