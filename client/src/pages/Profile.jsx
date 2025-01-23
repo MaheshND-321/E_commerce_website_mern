@@ -20,7 +20,6 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import { data, Link } from "react-router-dom";
-import Listing from "../../../api/models/listing.model";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -278,7 +277,9 @@ export default function Profile() {
                 >
                   Delete
                 </button>
-                <button className="text-green-700">Edit</button>
+                <Link to={`/update-listing/${Listing._id}`}>
+                  <button className="text-green-700">Edit</button>
+                </Link>
               </div>
             </div>
           ))}
