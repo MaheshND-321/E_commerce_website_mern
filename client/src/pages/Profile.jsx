@@ -73,12 +73,12 @@ export default function Profile() {
 
   const handelSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form Data:", formData);
     try {
       dispatch(updateStart());
       const res = await fetch(`api/user/update/${currentUser._id}`, {
         method: "POST",
         headers: {
-          method: "POST",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
@@ -90,9 +90,8 @@ export default function Profile() {
       }
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
-      console.log("Dispatched updateUserSuccess:", response.data);
     } catch (error) {
-      dispatch(updateUserFailure(data.message));
+      dispatch(updateUserFailure(error.message));
     }
   };
 

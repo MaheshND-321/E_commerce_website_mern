@@ -32,7 +32,7 @@ const userSlice = createSlice({
             state.currentUser= action.payload;
             state.loading = false;
             state.error= null;
-            // console.log("Reducer updated currentUser:", state.currentUser);
+            console.log("Reducer updated currentUser:", state.currentUser);
         },
         updateUserFailure:(state, action)=>{
             state.error = action.payload;
