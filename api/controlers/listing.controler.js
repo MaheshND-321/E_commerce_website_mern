@@ -95,21 +95,21 @@ try{
     type = { $in : ['sale', 'rent']};
   }
 
-  const searchItem = req.query.searchItem || '';
+  const searchTerm = req.query.searchTerm || '';
 
   const sort = req.query.sort || 'createdAt';
 
   const order = req.query.order || 'desc';
 
   const listings = await Listing.find({
-    name: {$regex : searchItem, $options: 'i'},
+    name: {$regex : searchTerm, $options: 'i'},
     offer,
     furnished,
     parking,
     type,
   }).sort(
     {[sort]:order}
-  ).limit(limit).skip(startIndex)
+  ).limit(limit).skip(startIndex);
 
   return res.status(200).json(listings);
 }

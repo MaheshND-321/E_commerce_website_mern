@@ -142,9 +142,9 @@ export default function Profile() {
     }
   };
 
-  const handelListingDelete = async (listingID) => {
+  const handelListingDelete = async (listingId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingID}`, {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -153,7 +153,7 @@ export default function Profile() {
         return;
       }
       setUserListings((prev) =>
-        prev.filter((listing) => listing._id !== listingID)
+        prev.filter((listing) => listing._id !== listingId)
       );
     } catch (error) {
       console.log(error);
