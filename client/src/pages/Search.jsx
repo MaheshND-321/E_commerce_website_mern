@@ -23,17 +23,24 @@ const Search = () => {
   // console.log(listings);
 
   const onShowMoreClick = async () => {
-    const numberListings = listings.length;
-    const startIndex = numberListings;
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set("startIndex", startIndex);
-    const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/listing/get${searchQuery}`);
-    const data = await res.json();
-    if (data.length < 9) {
-      setShowMore(false);
+    try {
+      const startIndex = listings.length; // Get current number of listings
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.set("startIndex", startIndex);
+
+      const searchQuery = urlParams.toString();
+      const res = await fetch(`/api/listing/get?${searchQuery}`);
+      const data = await res.json();
+
+      if (data.length < 9) {
+        setShowMore(false);
+      }
+
+      // Append new listings to existing ones
+      setListings((prevListings) => [...prevListings, ...data]);
+    } catch (error) {
+      console.error("Error loading more listings:", error);
     }
-    setListings([...listings, ...data]);
   };
 
   useEffect(() => {
